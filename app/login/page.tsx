@@ -15,8 +15,8 @@ export default function LoginPage() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
-  const handleLogin = async (e : any) =>{
-    e.preventDefault();
+  const handleLogin = async (e : any ) =>{ 
+    e.preventDefault(); // maine git hub per push bhi kr diya
     setLoading(true);
     setError("");
     setSuccess("");
@@ -33,7 +33,7 @@ export default function LoginPage() {
         const data = await res.json();
         console.log(data);
 
-      if(!data.success){
+      if(!data.success){ // false value pe set krega error
         setError(data.message);
       }
       else{
@@ -43,25 +43,29 @@ export default function LoginPage() {
         router.push("/dashboard");
       }
 
-    } catch (error) {
-      setError("Something went wrong");
+    } catch (e) {
+      setError("Something went wrong:");
+      console.log(e);
+    }finally{
+      console.log(error);
+      console.log(success);
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center 
     bg-gray-100 dark:bg-gray-900 transition-colors duration-300">
-
       <div className="w-full max-w-md p-8 rounded-2xl shadow-lg 
+      
       bg-white dark:bg-gray-800">
-
+        
         {/* Heading */}
         <h2 className="text-3xl font-bold text-center mb-6 
         text-gray-800 dark:text-white">
           Login
         </h2>
-
+        {/* {<p className="text-red-500">{error}</p>} */}
         {/* Form */}
         <form
           onSubmit={handleLogin} 

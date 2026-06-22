@@ -1,4 +1,5 @@
 import connectDB from "@/lib/mongodb";
+import { updateStreak } from "@/lib/updateStreak";
 import { verifyToken } from "@/lib/verifyToken";
 import User from "@/models/User";
 import { NextResponse } from "next/server";
@@ -9,6 +10,7 @@ function checkRole(userRole:string,allowedRoles:string[]) {
 
 export async function GET() {
     const result  = await verifyToken();
+    await updateStreak(result.id);
     
     if(result instanceof NextResponse){
         return result;
@@ -30,11 +32,16 @@ export async function GET() {
     return NextResponse.json({
         message: "Welcome to Dashboard",
         user: {
-          id: dbUser._id,
-          email: dbUser.email
+            id: dbUser._id,
+            email: dbUser.email
         },
+    
         stats: dbUser.stats,
-      
-        activity: dbUser.activity
-      });
+        activity: dbUser.activity,
+        solvedProblems: dbUser.solvedProblems,
+        solvedQuestions: dbUser.solvedQuestions,
+        solvedInterviewQuestions: dbUser.solvedInterviewQuestions,
+        streak: dbUser.streak,
+        
+    });
 }

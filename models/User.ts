@@ -14,6 +14,12 @@ export interface IUser extends Document {
   };
 
   activity: string[];
+  solvedProblems: string[];
+  solvedQuestions: string[];
+  solvedInterviewQuestions: string[];
+
+  streak: number;
+  lastActiveDate: string;
 }
 
 const userSchema = new mongoose.Schema<IUser>(
@@ -61,7 +67,32 @@ const userSchema = new mongoose.Schema<IUser>(
     activity: {
       type: [String],
       default: []
+    },
+    
+    solvedProblems: {
+      type: [String],
+      default: []
+    },
+    solvedQuestions: {
+      type: [String],
+      default: []
+    },
+
+    solvedInterviewQuestions: {
+      type: [String],
+      default: []
+    },
+
+    streak: {
+      type: Number,
+      default: 0
+    },
+    
+    lastActiveDate: {
+      type: String,
+      default: ""
     }
+
   },
   { timestamps: true }
 );

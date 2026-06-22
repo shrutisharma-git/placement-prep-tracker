@@ -3,7 +3,6 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { modules } from "../data/modules";
-import { BookOpen } from "lucide-react";
 
 
 type User = {
@@ -34,7 +33,7 @@ export default function Dashboard(){
   });
 
   const [activity, setActivity] = useState<string[]>([]);
-  const [problemName, setProblemName] = useState<string>("");
+  const [streak, setStreak] = useState(0);
 
   //Fetch user data
   useEffect(() => {
@@ -53,6 +52,8 @@ export default function Dashboard(){
         const data = await res.json();
         
         setUserData(data.user);
+        console.log(userData)
+        setStreak(data.streak || 0);
 
         if (data.stats) {
           setStats(data.stats);
@@ -110,34 +111,49 @@ export default function Dashboard(){
       </div>
 
       {/* Welcome */}
-      <div className="mb-6">
-        <h2 className="text-xl text-gray-700 dark:text-gray-300">
-          Welcome,{" "}
-          <span className="font-semibold">
-            {userData?.email || "User"}
-            </span>
-            👋
-        </h2>
+      <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-8 rounded-2xl shadow-lg mb-8">
+
+        <h1 className="text-3xl font-bold">
+            Welcome Back 👋
+        </h1>
+
+        <p className="mt-3 text-lg">
+            Keep practicing consistently and crack your dream placement 🚀
+        </p>
+
       </div>
 
       {/* Stats Cards */}
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
 
-        <div className="p-6 bg-white dark:bg-gray-800 rounded-xl shadow">
-          <h3 className="text-gray-500">DSA Solved</h3>
+        <div className="bg-blue-500 text-white p-6 rounded-2xl shadow">
+          <h3 className="text-xl font-semibold">DSA Solved</h3>
           <p className="text-2xl font-bold text-blue-600">{stats.dsa}</p>
         </div>
-        <div className="p-6 bg-white dark:bg-gray-800 rounded-xl shadow">
-          <h3 className="text-gray-500">Aptitude</h3>
+        <div className="bg-green-500 text-white p-6 rounded-2xl shadow">
+          <h3 className="text-xl font-semibold">Aptitude</h3>
           <p className="text-2xl font-bold text-green-600">{stats.aptitude}</p>
         </div>
-        <div className="p-6 bg-white dark:bg-gray-800 rounded-xl shadow">
-          <h3 className="text-gray-500">Mock Interview</h3>
+        <div className="bg-purple-500 text-white p-6 rounded-2xl shadow">
+          <h3 className="text-xl font-semibold">Mock Interview</h3>
           <p className="text-2xl font-bold text-purple-600">{stats.mockInterview}</p>
         </div>
 
       </div>
+
+      {/* Daily Streak */}
+      <div className="mt-8 bg-orange-500 text-white p-6 rounded-xl shadow">
+
+        <h2 className="text-2xl font-bold">
+            🔥 Daily Streak
+        </h2>
+
+        <p className="text-xl mt-2">
+            {streak} Days
+        </p>
+
+    </div>
 
       {/* Modules */}
       <h1 className="text-2xl font-bold text-gray-800 dark:text-white m-4">
@@ -179,31 +195,81 @@ export default function Dashboard(){
       </div>
 
       {/* Activity Section */}
-      <div className="mt-8 bg-white dark:bg-gray-800 p-6 rounded-xl shadow">
-        <h3 className="text-lg font-semibold text-gray-700 dark:text-white mb-4">
-          Recent Activity
-        </h3>
+      <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow">
 
-        <ul className="space-y-2 text-gray-600 dark:text-gray-300">
-          {activity.length > 0 ?(
-            activity.map((item,index) =>(
-              <li key={index} className="flex items-center gap-2">
-                ✅ {item}
-              </li>
-            ))
-          ) : (
-            <li className="text-gray-500">No recent activity!</li>
-          )}
-        </ul>
-      </div>
+        <h2 className="text-2xl font-bold mb-4 dark:text-white">
+            Recent Activity
+        </h2>
+
+        {
+            activity.length > 0 ? (
+
+                activity.slice().reverse().map((item, index) => (
+
+                    <div
+                        key={index}
+                        className="mb-3 p-3 bg-gray-100 dark:bg-gray-700 rounded-xl"
+                    >
+                        {item}
+                    </div>
+
+                ))
+
+            ) : (
+
+                <p>No activity yet.</p>
+
+            )
+        }
+
+    </div>
 
       {/* Quick Actions */}
 
-      <div className="mt-8 flex gap-4 flex-wrap">
+      <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow">
+
+      <h2 className="text-2xl font-bold mb-4 dark:text-white">
+          Quick Access
+      </h2>
+
+      <div className="flex gap-4 flex-wrap">
+        <button
+          className="bg-blue-600 text-white px-5 py-3 rounded-xl"
+        >
+          DSA
+        </button>
+
+        <button
+          className="bg-green-600 text-white px-5 py-3 rounded-xl"
+        >
+          Aptitude
+        </button>
+
+        <button
+          className="bg-purple-600 text-white px-5 py-3 rounded-xl"
+        >
+          Interview
+        </button>
+      </div>
+
+    </div>
+
+      <div className="mt-8 bg-gradient-to-r from-pink-500 to-red-500 text-white p-6 rounded-2xl shadow">
+
+          <h2 className="text-2xl font-bold">
+              Daily Motivation 💡
+          </h2>
+
+          <p className="mt-3">
+              Success does not come from what you do occasionally.
+              It comes from what you do consistently.
+          </p>
 
       </div>
 
 
     </div>
+
+    
   )
 }

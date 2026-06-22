@@ -11,36 +11,33 @@ export async function POST(req: Request) {
         return result;
     }
 
-    const { problemName } = await req.json();
+    const { questionName } = await req.json();
 
     await connectDB();
 
     const user = await User.findById(result.id);
 
-    if(user.solvedProblems.includes(problemName)){
+    if (user.solvedQuestions.includes(questionName)) {
         return NextResponse.json({
             message: "Already solved!"
         });
     }
 
-    const updatedUser = await User.findByIdAndUpdate(
+    await User.findByIdAndUpdate(
         result.id,
         {
             $inc: {
-                "stats.dsa": 1
+                "stats.aptitude": 1
             },
 
             $push: {
-                activity: `Solved ${problemName} problem`,
-                solvedProblems: problemName
+                solvedQuestions: questionName,
+                activity: `Solved aptitude question: ${questionName}`
             }
-        },
-
-        { new: true }
+        }
     );
 
     return NextResponse.json({
-        message: "Problem marked solved",
-        stats: updatedUser?.stats
+        message: "Question marked as solved"
     });
 }
