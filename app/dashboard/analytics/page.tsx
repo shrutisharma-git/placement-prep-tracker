@@ -2,212 +2,178 @@
 
 import { useEffect, useState } from "react";
 import { Bar, BarChart, CartesianGrid, Cell, Legend, Line, LineChart, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { BarChart3, Code2, Brain, Mic } from "lucide-react";
+import PageHeader from "@/components/ui/PageHeader";
+import StatCard from "@/components/ui/StatCard";
+import GlassCard from "@/components/ui/GlassCard";
 
 export default function AnalyticsPage() {
+  const [stats, setStats] = useState({
+    dsa: 0,
+    aptitude: 0,
+    mockInterview: 0
+  });
 
-    const [stats,setStats] = useState({
-        dsa: 0,
-        aptitude: 0,
-        mockInterview: 0
-    });
+  useEffect(() => {
+    const fetchStats = async () => {
+      const res = await fetch("/api/dashboard");
+      const data = await res.json();
+      if (data.stats) setStats(data.stats);
+    };
+    fetchStats();
+  }, []);
 
-    useEffect(() => {
-      const fetchStats = async () => {
-         const res = await fetch("/api/dashboard");
-         const data = await res.json();
+  const data = [
+    { name: "DSA", value: stats.dsa, color: "#3b82f6" }, // blue-500
+    { name: "Aptitude", value: stats.aptitude, color: "#10b981" }, // emerald-500
+    { name: "Interview", value: stats.mockInterview, color: "#a855f7" }, // purple-500
+  ];
 
-         setStats(data.stats);
-      };
-      fetchStats();
-      
-    }, [])
-    
+  // Dummy data representing progress over time
+  const weeklyData = [
+    { week: "W1", problems: 2 },
+    { week: "W2", problems: 5 },
+    { week: "W3", problems: 8 },
+    { week: "W4", problems: 12 }
+  ];
 
-    const data = [
-        {
-            name: "DSA",
-            value: stats.dsa,
-        },
-        {
-            name: "Aptitude",
-            value: stats.aptitude,
-        },
-        {
-            name: "Interview",
-            value: stats.mockInterview,
-        },
-    ];
+  const totalSolved = stats.dsa + stats.aptitude + stats.mockInterview;
 
-    const weeklyData = [
-        {
-            week: "Week 1",
-            problems: 2
-        },
-    
-        {
-            week: "Week 2",
-            problems: 5
-        },
-    
-        {
-            week: "Week 3",
-            problems: 8
-        },
-    
-        {
-            week: "Week 4",
-            problems: 12
-        }
-    ];
+  return (
+    <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto">
+      <PageHeader
+        title="Analytics Dashboard"
+        description="Track your performance, analyze your strengths, and visualize your preparation journey."
+        icon={BarChart3}
+        iconColor="text-amber-500"
+      />
 
-    return (
+      {/* Top Stat Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
+        <StatCard
+          icon={Code2}
+          label="DSA Problems Solved"
+          value={stats.dsa}
+          gradient="bg-gradient-to-br from-blue-500 to-indigo-600"
+          delay={0.1}
+        />
+        <StatCard
+          icon={Brain}
+          label="Aptitude Questions"
+          value={stats.aptitude}
+          gradient="bg-gradient-to-br from-emerald-500 to-teal-600"
+          delay={0.2}
+        />
+        <StatCard
+          icon={Mic}
+          label="Mock Interviews"
+          value={stats.mockInterview}
+          gradient="bg-gradient-to-br from-purple-500 to-violet-600"
+          delay={0.3}
+        />
+      </div>
 
-
-        <div className="min-h-screen bg-gray-100 dark:bg-gray-900 p-6">
-
-            <h1 className="text-3xl font-bold text-gray-800 dark:text-white mb-8">
-                Analytics Dashboard
-            </h1>
-
-            <div className="bg-white dark:bg-gray-800 p-6 rounded-xl">
-                
-                <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4 ">
-                    Progress Overview
-                </h2>
-
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-
-                    <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow">
-
-                        <h3 className="text-gray-500">
-                            DSA Solved
-                        </h3>
-
-                        <p className="text-3xl font-bold text-blue-600">
-                            {stats.dsa}
-                        </p>
-
-                    </div>
-
-                    <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow">
-
-                        <h3 className="text-gray-500">
-                            Aptitude
-                        </h3>
-
-                        <p className="text-3xl font-bold text-green-600">
-                            {stats.aptitude}
-                        </p>
-
-                    </div>
-
-                    <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow">
-
-                        <h3 className="text-gray-500">
-                            Mock Interview
-                        </h3>
-
-                        <p className="text-3xl font-bold text-purple-600">
-                            {stats.mockInterview}
-                        </p>
-
-                    </div>
-
-                </div>
-
-                {/* Bar Chart */}
-                <div className="h-80">
-
-                    <ResponsiveContainer width="100%" height="100%">
-                        <BarChart data={data}>
-                            <XAxis dataKey="name"/>
-                            <YAxis/>
-                            <Tooltip/>
-
-                            <Bar
-                             dataKey="value"
-                             fill="#3b82f6"/>
-
-                        </BarChart>
-
-                    </ResponsiveContainer>
-
-
-                </div>
-
-                {/* Pie Chart */}
-
-                <div className="bg-white dark:bg-gray-800 p-6 rounded-xl mt-8">
-
-                    <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-6">
-                        Distribution
-                    </h2>
-
-                    <div className="h-80">
-
-                        <ResponsiveContainer width="100%" height="100%">
-
-                            <PieChart>
-
-                                <Pie
-                                    data={data}
-                                    dataKey="value"
-                                    nameKey="name"
-                                    outerRadius={100}
-                                    label
-                                />
-
-
-                                <Tooltip />
-
-                                <Legend />
-
-                            </PieChart>
-
-                        </ResponsiveContainer>
-
-                    </div>
-
-                </div>
-
-                {/* Line Chart */}
-
-                <div className="bg-white dark:bg-gray-800 p-6 rounded-xl mt-8">
-
-                    <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">
-                        Weekly Progress
-                    </h2>
-
-                    <div className="h-80">
-
-                        <ResponsiveContainer width="100%" height="100%">
-
-                            <LineChart data={weeklyData}>
-
-                                <CartesianGrid strokeDasharray="3 3" />
-
-                                <XAxis dataKey="week" />
-
-                                <YAxis />
-
-                                <Tooltip />
-
-                                <Line
-                                    type="monotone"
-                                    dataKey="problems"
-                                    stroke="#3b82f6"
-                                />
-
-                            </LineChart>
-
-                        </ResponsiveContainer>
-
-                    </div>
-
-                </div>
-
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {/* Bar Chart */}
+        <GlassCard delay={0.4}>
+          <div className="p-6">
+            <h2 className="text-xl font-bold text-slate-800 dark:text-white mb-6">
+              Progress Overview
+            </h2>
+            <div className="h-72 w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#cbd5e1" opacity={0.2} />
+                  <XAxis dataKey="name" tick={{ fill: '#64748b' }} axisLine={false} tickLine={false} />
+                  <YAxis tick={{ fill: '#64748b' }} axisLine={false} tickLine={false} />
+                  <Tooltip 
+                    cursor={{ fill: 'transparent' }}
+                    contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)', backgroundColor: 'rgba(255, 255, 255, 0.9)' }}
+                  />
+                  <Bar dataKey="value" radius={[6, 6, 0, 0]}>
+                    {data.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
             </div>
+          </div>
+        </GlassCard>
 
+        {/* Pie Chart */}
+        <GlassCard delay={0.5}>
+          <div className="p-6">
+            <h2 className="text-xl font-bold text-slate-800 dark:text-white mb-6">
+              Category Distribution
+            </h2>
+            {totalSolved === 0 ? (
+              <div className="h-72 flex flex-col items-center justify-center text-slate-400">
+                <BarChart3 size={48} className="mb-4 opacity-50" />
+                <p>No data available yet</p>
+                <p className="text-sm mt-1">Start practicing to see your distribution!</p>
+              </div>
+            ) : (
+              <div className="h-72 w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={data}
+                      cx="50%"
+                      cy="50%"
+                      innerRadius={80}
+                      outerRadius={110}
+                      paddingAngle={5}
+                      dataKey="value"
+                      stroke="none"
+                    >
+                      {data.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.color} />
+                      ))}
+                    </Pie>
+                    <Tooltip 
+                      contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)' }}
+                      itemStyle={{ color: '#1e293b', fontWeight: 600 }}
+                    />
+                    <Legend verticalAlign="bottom" height={36} iconType="circle" />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+            )}
+          </div>
+        </GlassCard>
+
+        {/* Line Chart - Full Width */}
+        <div className="lg:col-span-2">
+          <GlassCard delay={0.6}>
+            <div className="p-6">
+              <h2 className="text-xl font-bold text-slate-800 dark:text-white mb-6">
+                Weekly Activity Trend
+              </h2>
+              <div className="h-80 w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart data={weeklyData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#cbd5e1" opacity={0.2} />
+                    <XAxis dataKey="week" tick={{ fill: '#64748b' }} axisLine={false} tickLine={false} />
+                    <YAxis tick={{ fill: '#64748b' }} axisLine={false} tickLine={false} />
+                    <Tooltip 
+                      contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)' }}
+                    />
+                    <Line
+                      type="monotone"
+                      dataKey="problems"
+                      stroke="#3b82f6"
+                      strokeWidth={4}
+                      dot={{ fill: '#3b82f6', strokeWidth: 2, r: 6, stroke: '#fff' }}
+                      activeDot={{ r: 8, strokeWidth: 0 }}
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+          </GlassCard>
         </div>
-    );
+      </div>
+    </div>
+  );
 }

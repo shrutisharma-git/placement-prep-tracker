@@ -15,8 +15,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Placement Preparation System",
-  description: "Track and improve your placement preparation",
+  title: "PrepTracker — Placement Preparation Platform",
+  description: "Your all-in-one placement preparation companion. Practice DSA, Aptitude, and Mock Interviews to crack your dream placement.",
 };
 
 export default function RootLayout({
@@ -27,11 +27,16 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-100 dark:bg-gray-900 text-black dark:text-white`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased
+        bg-slate-50 dark:bg-[#0B1120]
+        text-slate-900 dark:text-slate-100
+        transition-colors duration-300`}
       >
         <Providers>
           <Navbar />
-          {children}
+          <main className="min-h-[calc(100vh-4rem)]">
+            {children}
+          </main>
         </Providers>
       </body>
     </html>
