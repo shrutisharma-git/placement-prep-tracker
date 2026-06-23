@@ -32,8 +32,8 @@ export default function ProfilePage() {
       const res = await fetch("/api/dashboard");
       const data = await res.json();
       setUser(data.user);
-      if(data.stats) setStats(data.stats);
-      if(data.streak) setStreak(data.streak);
+      if (data.stats) setStats(data.stats);
+      if (data.streak) setStreak(data.streak);
     };
     fetchProfile();
   }, []);
@@ -47,11 +47,10 @@ export default function ProfilePage() {
         description="View your personal information and overall platform statistics."
         icon={UserIcon}
         iconColor="text-blue-500"
-        showBack
       />
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        
+
         {/* Left Column: User Identity */}
         <div className="md:col-span-1 space-y-6">
           <GlassCard delay={0.1}>
@@ -67,11 +66,11 @@ export default function ProfilePage() {
                   )}
                 </div>
               </div>
-              
+
               <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-1">
                 {user?.name || "Student"}
               </h2>
-              
+
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 text-sm font-medium mb-6">
                 <Shield size={14} className="text-emerald-500" />
                 {user?.role === 'admin' ? 'Administrator' : 'Standard User'}
@@ -112,7 +111,7 @@ export default function ProfilePage() {
         {/* Right Column: Statistics */}
         <div className="md:col-span-2 space-y-6">
           <h3 className="text-xl font-bold text-slate-800 dark:text-white">Preparation Journey</h3>
-          
+
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {/* Total */}
             <GlassCard delay={0.3} className="sm:col-span-2">

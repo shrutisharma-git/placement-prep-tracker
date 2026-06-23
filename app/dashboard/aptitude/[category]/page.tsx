@@ -1,15 +1,16 @@
 "use client";
 
 import { aptitudeQuestions } from "@/app/data/aptitudeQuestions";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Brain, Trophy, Flame, Eye, EyeOff, CheckCircle2, Circle, AlertCircle, RefreshCw, Target, ArrowLeft } from "lucide-react";
+import { Brain, Trophy, Flame, Eye, EyeOff, CheckCircle2, Circle, AlertCircle, RefreshCw, Target } from "lucide-react";
 import ProgressBar from "@/components/ui/ProgressBar";
 import SearchInput from "@/components/ui/SearchInput";
 import GradientButton from "@/components/ui/GradientButton";
 import EmptyState from "@/components/ui/EmptyState";
 import StatCard from "@/components/ui/StatCard";
+import Loader from "@/components/ui/Loader";
 
 export default function AptitudeCategoryPage() {
   const params = useParams();
@@ -24,6 +25,7 @@ export default function AptitudeCategoryPage() {
   const [checkedAnswers, setCheckedAnswers] = useState<number[]>([]);
   const [score, setScore] = useState(0);
   const [attempts, setAttempts] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
 
   const accuracy = attempts > 0 ? Math.round((score / attempts) * 100) : 0;
 
@@ -40,23 +42,30 @@ export default function AptitudeCategoryPage() {
 
   useEffect(() => {
     const fetchSolvedQuestions = async () => {
-      const res = await fetch("/api/dashboard");
-      const data = await res.json();
-      setSolvedQuestions(data.solvedQuestions || []);
+      try {
+        const res = await fetch("/api/dashboard");
+        const data = await res.json();
+        setSolvedQuestions(data.solvedQuestions || []);
+      } catch (error) {
+        console.error("Failed to fetch", error);
+      } finally {
+        setIsLoading(false);
+      }
     };
     fetchSolvedQuestions();
   }, []);
 
+  if (isLoading) {
+    return (
+      <div className="p-4 sm:p-6 lg:p-8 max-w-5xl mx-auto min-h-[60vh] flex items-center justify-center">
+        <Loader text="Loading aptitude practice..." />
+      </div>
+    );
+  }
+
   return (
     <div className="p-4 sm:p-6 lg:p-8 max-w-5xl mx-auto">
-      <button
-        onClick={() => router.back()}
-        className="flex items-center gap-2 text-sm font-semibold text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-colors mb-6 group"
-      >
-        <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
-        Back
-      </button>
-      
+
       {/* Header & Progress */}
       <div className="mb-10">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-6">
@@ -70,8 +79,8 @@ export default function AptitudeCategoryPage() {
           </div>
 
           <div className="md:w-64">
-            <ProgressBar 
-              percentage={progressPercentage} 
+            <ProgressBar
+              percentage={progressPercentage}
               label="Progress"
               sublabel={`${solvedCount} / ${questions.length} Solved`}
               variant="green"
@@ -81,7 +90,7 @@ export default function AptitudeCategoryPage() {
 
         {/* Completion Banner */}
         {isCategoryCompleted && (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             className="p-4 rounded-2xl bg-gradient-to-r from-emerald-500 to-green-600 text-white shadow-lg shadow-emerald-500/20 flex items-center gap-3 mb-6"
@@ -130,10 +139,10 @@ export default function AptitudeCategoryPage() {
 
       {/* Search */}
       <div className="mb-8">
-        <SearchInput 
-          value={search} 
-          onChange={setSearch} 
-          placeholder="Search questions..." 
+        <SearchInput
+          value={search}
+          onChange={setSearch}
+          placeholder="Search questions..."
         />
       </div>
 
@@ -145,7 +154,7 @@ export default function AptitudeCategoryPage() {
             const isChecked = checkedAnswers.includes(question.id);
             const isCorrect = answers[question.id]?.trim().toLowerCase() === question.answer.toLowerCase();
             const isShowingAnswer = showAnswer.includes(question.id);
-            
+
             return (
               <motion.div
                 key={question.id}
@@ -185,7 +194,7 @@ export default function AptitudeCategoryPage() {
 
                     {/* Check Result */}
                     {isChecked && (
-                      <motion.div 
+                      <motion.div
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: "auto" }}
                         className={`mt-3 flex items-center gap-2 text-sm font-semibold p-3 rounded-lg ${isCorrect ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-400' : 'bg-red-100 text-red-700 dark:bg-red-500/20 dark:text-red-400'}`}
@@ -197,7 +206,7 @@ export default function AptitudeCategoryPage() {
 
                     {/* Show Answer Reveal */}
                     {isShowingAnswer && (
-                      <motion.div 
+                      <motion.div
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: "auto" }}
                         className="mt-3 p-4 bg-blue-50 dark:bg-blue-500/10 border border-blue-200 dark:border-blue-500/20 rounded-lg"
@@ -273,8 +282,8 @@ export default function AptitudeCategoryPage() {
             );
           })
         ) : (
-          <EmptyState 
-            message="No questions found" 
+          <EmptyState
+            message="No questions found"
             submessage="Try adjusting your search."
           />
         )}

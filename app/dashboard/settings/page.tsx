@@ -22,11 +22,10 @@ export default function SettingsPage() {
         description="Manage your account preferences, appearance, and notifications."
         icon={Settings}
         iconColor="text-slate-500 dark:text-slate-400"
-        showBack
       />
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-        
+
         {/* Settings Navigation (Desktop only) */}
         <div className="hidden md:block col-span-1 space-y-2">
           {[
@@ -38,8 +37,8 @@ export default function SettingsPage() {
             <button
               key={item.id}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors
-                ${item.id === "appearance" 
-                  ? "bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400" 
+                ${item.id === "appearance"
+                  ? "bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400"
                   : "text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800"
                 }`}
             >
@@ -51,7 +50,7 @@ export default function SettingsPage() {
 
         {/* Settings Content */}
         <div className="md:col-span-3 space-y-8">
-          
+
           {/* Appearance Section */}
           <GlassCard hover={false}>
             <div className="p-6 sm:p-8">
@@ -61,7 +60,7 @@ export default function SettingsPage() {
                 </div>
                 <h2 className="text-xl font-bold text-slate-800 dark:text-white">Appearance</h2>
               </div>
-              
+
               <div className="space-y-6">
                 <div>
                   <p className="text-sm font-medium text-slate-700 dark:text-slate-300 mb-4">Theme Preference</p>
@@ -70,8 +69,8 @@ export default function SettingsPage() {
                     <button
                       onClick={() => setTheme("light")}
                       className={`flex flex-col items-center gap-3 p-4 rounded-xl border-2 transition-all
-                        ${theme === "light" 
-                          ? "border-blue-500 bg-blue-50 dark:bg-transparent" 
+                        ${theme === "light"
+                          ? "border-blue-500 bg-blue-50 dark:bg-transparent"
                           : "border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600"
                         }`}
                     >
@@ -80,13 +79,13 @@ export default function SettingsPage() {
                       </div>
                       <span className="font-semibold text-slate-700 dark:text-slate-300">Light</span>
                     </button>
-                    
+
                     {/* Dark Theme */}
                     <button
                       onClick={() => setTheme("dark")}
                       className={`flex flex-col items-center gap-3 p-4 rounded-xl border-2 transition-all
-                        ${theme === "dark" 
-                          ? "border-blue-500 bg-slate-800" 
+                        ${theme === "dark"
+                          ? "border-blue-500 bg-slate-800"
                           : "border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600"
                         }`}
                     >
@@ -95,13 +94,13 @@ export default function SettingsPage() {
                       </div>
                       <span className="font-semibold text-slate-700 dark:text-slate-300">Dark</span>
                     </button>
-                    
+
                     {/* System Theme */}
                     <button
                       onClick={() => setTheme("system")}
                       className={`flex flex-col items-center gap-3 p-4 rounded-xl border-2 transition-all
-                        ${theme === "system" 
-                          ? "border-blue-500 bg-slate-50 dark:bg-slate-800/50" 
+                        ${theme === "system"
+                          ? "border-blue-500 bg-slate-50 dark:bg-slate-800/50"
                           : "border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600"
                         }`}
                     >
@@ -125,7 +124,7 @@ export default function SettingsPage() {
                 </div>
                 <h2 className="text-xl font-bold text-slate-800 dark:text-white">Notifications</h2>
               </div>
-              
+
               <div className="space-y-4">
                 {[
                   { id: 'email', label: 'Email Notifications', desc: 'Receive practice reminders via email' },
@@ -138,11 +137,11 @@ export default function SettingsPage() {
                       <p className="text-sm text-slate-500 dark:text-slate-400">{item.desc}</p>
                     </div>
                     <label className="relative inline-flex items-center cursor-pointer">
-                      <input 
-                        type="checkbox" 
+                      <input
+                        type="checkbox"
                         className="sr-only peer"
                         checked={notifications[item.id as keyof typeof notifications]}
-                        onChange={(e) => setNotifications({...notifications, [item.id]: e.target.checked})}
+                        onChange={(e) => setNotifications({ ...notifications, [item.id]: e.target.checked })}
                       />
                       <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
                     </label>

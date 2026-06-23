@@ -46,7 +46,6 @@ export default function AnalyticsPage() {
         description="Track your performance, analyze your strengths, and visualize your preparation journey."
         icon={BarChart3}
         iconColor="text-amber-500"
-        showBack
       />
 
       {/* Top Stat Cards */}
@@ -87,7 +86,7 @@ export default function AnalyticsPage() {
                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#cbd5e1" opacity={0.2} />
                   <XAxis dataKey="name" tick={{ fill: '#64748b' }} axisLine={false} tickLine={false} />
                   <YAxis tick={{ fill: '#64748b' }} axisLine={false} tickLine={false} />
-                  <Tooltip 
+                  <Tooltip
                     cursor={{ fill: 'transparent' }}
                     contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)', backgroundColor: 'rgba(255, 255, 255, 0.9)' }}
                   />
@@ -132,7 +131,7 @@ export default function AnalyticsPage() {
                         <Cell key={`cell-${index}`} fill={entry.color} />
                       ))}
                     </Pie>
-                    <Tooltip 
+                    <Tooltip
                       contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)' }}
                       itemStyle={{ color: '#1e293b', fontWeight: 600 }}
                     />
@@ -157,7 +156,7 @@ export default function AnalyticsPage() {
                     <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#cbd5e1" opacity={0.2} />
                     <XAxis dataKey="week" tick={{ fill: '#64748b' }} axisLine={false} tickLine={false} />
                     <YAxis tick={{ fill: '#64748b' }} axisLine={false} tickLine={false} />
-                    <Tooltip 
+                    <Tooltip
                       contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)' }}
                     />
                     <Line

@@ -15,7 +15,6 @@ export default function DsaPage() {
         title="DSA Preparation"
         description="Master Data Structures and Algorithms with our curated list of topics and problems. Track your progress and crack coding interviews."
         icon={Code2}
-        showBack
       />
 
       {/* topics grid */}
@@ -31,7 +30,7 @@ export default function DsaPage() {
                 <div className={`p-3 rounded-xl ${topic.color} shadow-lg text-white transform group-hover:scale-110 transition-transform duration-300`}>
                   <BookOpen size={24} />
                 </div>
-                
+
                 <div className="px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-700/50 text-xs font-semibold text-slate-600 dark:text-slate-300">
                   {topic.problems} Problems
                 </div>

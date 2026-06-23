@@ -1,14 +1,15 @@
 "use client";
 
 import { interviewQuestions } from "@/app/data/interviewQuestions";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Mic, Trophy, Eye, EyeOff, CheckCircle2, Circle, AlertCircle, RefreshCw, MessageSquare, ArrowLeft } from "lucide-react";
+import { Mic, Trophy, Eye, EyeOff, CheckCircle2, Circle, AlertCircle, RefreshCw, MessageSquare } from "lucide-react";
 import ProgressBar from "@/components/ui/ProgressBar";
 import SearchInput from "@/components/ui/SearchInput";
 import GradientButton from "@/components/ui/GradientButton";
 import EmptyState from "@/components/ui/EmptyState";
+import Loader from "@/components/ui/Loader";
 
 export default function InterviewCategoryPage() {
   const params = useParams();
@@ -23,6 +24,7 @@ export default function InterviewCategoryPage() {
   const [solvedQuestions, setSolvedQuestions] = useState<string[]>([]);
   const [score, setScore] = useState(0);
   const [attempts, setAttempts] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
 
   const filteredQuestions = questions.filter((question) =>
     question.question.toLowerCase().includes(search.toLowerCase())
@@ -38,22 +40,29 @@ export default function InterviewCategoryPage() {
 
   useEffect(() => {
     const fetchSolvedQuestions = async () => {
-      const res = await fetch("/api/dashboard");
-      const data = await res.json();
-      setSolvedQuestions(data.solvedInterviewQuestions || []);
+      try {
+        const res = await fetch("/api/dashboard");
+        const data = await res.json();
+        setSolvedQuestions(data.solvedInterviewQuestions || []);
+      } catch (error) {
+        console.error("Failed to fetch", error);
+      } finally {
+        setIsLoading(false);
+      }
     };
     fetchSolvedQuestions();
   }, []);
 
+  if (isLoading) {
+    return (
+      <div className="p-4 sm:p-6 lg:p-8 max-w-5xl mx-auto min-h-[60vh] flex items-center justify-center">
+        <Loader text="Loading interview practice..." />
+      </div>
+    );
+  }
+
   return (
     <div className="p-4 sm:p-6 lg:p-8 max-w-5xl mx-auto">
-      <button
-        onClick={() => router.back()}
-        className="flex items-center gap-2 text-sm font-semibold text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-colors mb-6 group"
-      >
-        <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
-        Back
-      </button>
 
       {/* Header & Progress */}
       <div className="mb-10">
@@ -69,8 +78,8 @@ export default function InterviewCategoryPage() {
           </div>
 
           <div className="md:w-64">
-            <ProgressBar 
-              percentage={progressPercentage} 
+            <ProgressBar
+              percentage={progressPercentage}
               label="Progress"
               sublabel={`${solvedCount} / ${questions.length} Solved`}
               variant="purple"
@@ -80,7 +89,7 @@ export default function InterviewCategoryPage() {
 
         {/* Completion Banner */}
         {isCategoryCompleted && (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             className="p-4 rounded-2xl bg-gradient-to-r from-purple-500 to-violet-600 text-white shadow-lg shadow-purple-500/20 flex items-center gap-3 mb-6"
@@ -129,10 +138,10 @@ export default function InterviewCategoryPage() {
 
       {/* Search */}
       <div className="mb-8">
-        <SearchInput 
-          value={search} 
-          onChange={setSearch} 
-          placeholder="Search interview questions..." 
+        <SearchInput
+          value={search}
+          onChange={setSearch}
+          placeholder="Search interview questions..."
         />
       </div>
 
@@ -144,7 +153,7 @@ export default function InterviewCategoryPage() {
             const isChecked = checkedAnswers.includes(question.id);
             const isCorrect = answers[question.id]?.trim().toLowerCase() === question.answer.toLowerCase();
             const isShowingAnswer = showAnswer.includes(question.id);
-            
+
             return (
               <motion.div
                 key={question.id}
@@ -184,7 +193,7 @@ export default function InterviewCategoryPage() {
 
                     {/* Check Result */}
                     {isChecked && (
-                      <motion.div 
+                      <motion.div
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: "auto" }}
                         className={`mt-3 flex items-center gap-2 text-sm font-semibold p-3 rounded-lg ${isCorrect ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-400' : 'bg-red-100 text-red-700 dark:bg-red-500/20 dark:text-red-400'}`}
@@ -196,7 +205,7 @@ export default function InterviewCategoryPage() {
 
                     {/* Show Answer Reveal */}
                     {isShowingAnswer && (
-                      <motion.div 
+                      <motion.div
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: "auto" }}
                         className="mt-3 p-4 bg-purple-50 dark:bg-purple-500/10 border border-purple-200 dark:border-purple-500/20 rounded-lg"
@@ -273,8 +282,8 @@ export default function InterviewCategoryPage() {
             );
           })
         ) : (
-          <EmptyState 
-            message="No questions found" 
+          <EmptyState
+            message="No questions found"
             submessage="Try adjusting your search."
           />
         )}

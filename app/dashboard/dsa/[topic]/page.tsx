@@ -1,17 +1,17 @@
 "use client";
 import { dsaProblems } from "@/app/data/dsaProblems";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { ExternalLink, CheckCircle2, Circle, Trophy, Flame, ArrowLeft } from "lucide-react";
+import { ExternalLink, CheckCircle2, Circle, Trophy, Flame } from "lucide-react";
 import { motion } from "framer-motion";
 import ProgressBar from "@/components/ui/ProgressBar";
 import SearchInput from "@/components/ui/SearchInput";
 import GradientButton from "@/components/ui/GradientButton";
 import EmptyState from "@/components/ui/EmptyState";
+import Loader from "@/components/ui/Loader";
 
 export default function DSATopicPage() {
   const params = useParams();
-  const router = useRouter();
   const topic = params.topic as string;
   const problems = dsaProblems[topic] || [];
 
@@ -44,11 +44,19 @@ export default function DSATopicPage() {
   const progressPercentage = problems.length > 0 ? (solvedCount / problems.length) * 100 : 0;
   const isTopicCompleted = solvedCount === problems.length && problems.length > 0;
 
+  const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
     const fetchSolvedProblems = async () => {
-      const res = await fetch("/api/dashboard");
-      const data = await res.json();
-      setSolvedProblems(data.solvedProblems || []);
+      try {
+        const res = await fetch("/api/dashboard");
+        const data = await res.json();
+        setSolvedProblems(data.solvedProblems || []);
+      } catch (error) {
+        console.error("Failed to fetch solved problems", error);
+      } finally {
+        setIsLoading(false);
+      }
     };
     fetchSolvedProblems();
   }, []);
@@ -67,16 +75,17 @@ export default function DSATopicPage() {
     return "border-l-slate-500";
   };
 
+  if (isLoading) {
+    return (
+      <div className="p-4 sm:p-6 lg:p-8 max-w-5xl mx-auto min-h-[60vh] flex items-center justify-center">
+        <Loader text="Loading problems..." />
+      </div>
+    );
+  }
+
   return (
     <div className="p-4 sm:p-6 lg:p-8 max-w-5xl mx-auto">
-      <button
-        onClick={() => router.back()}
-        className="flex items-center gap-2 text-sm font-semibold text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-colors mb-6 group"
-      >
-        <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
-        Back
-      </button>
-      
+
       {/* Header & Progress */}
       <div className="mb-10">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-6">
@@ -90,8 +99,8 @@ export default function DSATopicPage() {
           </div>
 
           <div className="md:w-64">
-            <ProgressBar 
-              percentage={progressPercentage} 
+            <ProgressBar
+              percentage={progressPercentage}
               label="Progress"
               sublabel={`${solvedCount} / ${problems.length} Solved`}
               variant="green"
@@ -101,7 +110,7 @@ export default function DSATopicPage() {
 
         {/* Completion Banner */}
         {isTopicCompleted ? (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             className="p-4 rounded-2xl bg-gradient-to-r from-amber-400 to-orange-500 text-white shadow-lg shadow-orange-500/20 flex items-center gap-3"
@@ -115,7 +124,7 @@ export default function DSATopicPage() {
             </div>
           </motion.div>
         ) : (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             className="p-4 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-500/20 flex items-center gap-3"
@@ -134,10 +143,10 @@ export default function DSATopicPage() {
       {/* Filters */}
       <div className="flex flex-col sm:flex-row gap-4 mb-8">
         <div className="flex-grow">
-          <SearchInput 
-            value={search} 
-            onChange={setSearch} 
-            placeholder="Search problems..." 
+          <SearchInput
+            value={search}
+            onChange={setSearch}
+            placeholder="Search problems..."
           />
         </div>
         <div className="flex bg-slate-100 dark:bg-slate-800 p-1.5 rounded-xl self-start sm:self-auto overflow-x-auto">
@@ -146,8 +155,8 @@ export default function DSATopicPage() {
               key={diff}
               onClick={() => setDifficultyFilter(diff)}
               className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all whitespace-nowrap
-                ${difficultyFilter === diff 
-                  ? "bg-white dark:bg-slate-700 text-blue-600 dark:text-blue-400 shadow-sm" 
+                ${difficultyFilter === diff
+                  ? "bg-white dark:bg-slate-700 text-blue-600 dark:text-blue-400 shadow-sm"
                   : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
                 }`}
             >
@@ -162,7 +171,7 @@ export default function DSATopicPage() {
         {filteredProblems.length > 0 ? (
           filteredProblems.map((problem, idx) => {
             const isSolved = solvedProblems.includes(problem.name);
-            
+
             return (
               <motion.div
                 key={problem.id}
@@ -180,7 +189,7 @@ export default function DSATopicPage() {
                       <CheckCircle2 size={18} className="text-emerald-500" />
                     )}
                   </div>
-                  
+
                   <div className="flex items-center gap-3 mt-2">
                     <span className={`px-2.5 py-0.5 rounded-md text-xs font-bold ${getDifficultyColor(problem.difficulty)}`}>
                       {problem.difficulty}
@@ -233,8 +242,8 @@ export default function DSATopicPage() {
             );
           })
         ) : (
-          <EmptyState 
-            message="No problems found" 
+          <EmptyState
+            message="No problems found"
             submessage="Try adjusting your search or difficulty filter."
           />
         )}

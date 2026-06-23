@@ -16,7 +16,6 @@ export default function AptitudePage() {
         description="Sharpen your quantitative, logical, and verbal reasoning skills. Practice curated questions commonly asked in company assessments."
         icon={Brain}
         iconColor="text-emerald-500"
-        showBack
       />
 
       {/* categories grid */}
@@ -32,7 +31,7 @@ export default function AptitudePage() {
                 <div className={`p-3 rounded-xl ${category.color} shadow-lg text-white transform group-hover:scale-110 transition-transform duration-300`}>
                   <Target size={24} />
                 </div>
-                
+
                 <div className="px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-700/50 text-xs font-semibold text-slate-600 dark:text-slate-300">
                   {category.questions} Questions
                 </div>
