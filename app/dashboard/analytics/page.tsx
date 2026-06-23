@@ -46,6 +46,7 @@ export default function AnalyticsPage() {
         description="Track your performance, analyze your strengths, and visualize your preparation journey."
         icon={BarChart3}
         iconColor="text-amber-500"
+        showBack
       />
 
       {/* Top Stat Cards */}

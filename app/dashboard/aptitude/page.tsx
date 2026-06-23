@@ -16,6 +16,7 @@ export default function AptitudePage() {
         description="Sharpen your quantitative, logical, and verbal reasoning skills. Practice curated questions commonly asked in company assessments."
         icon={Brain}
         iconColor="text-emerald-500"
+        showBack
       />
 
       {/* categories grid */}

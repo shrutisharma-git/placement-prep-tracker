@@ -47,6 +47,7 @@ export default function ProfilePage() {
         description="View your personal information and overall platform statistics."
         icon={UserIcon}
         iconColor="text-blue-500"
+        showBack
       />
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">

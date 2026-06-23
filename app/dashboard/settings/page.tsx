@@ -22,6 +22,7 @@ export default function SettingsPage() {
         description="Manage your account preferences, appearance, and notifications."
         icon={Settings}
         iconColor="text-slate-500 dark:text-slate-400"
+        showBack
       />
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-8">

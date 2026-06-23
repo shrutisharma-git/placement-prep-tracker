@@ -15,6 +15,7 @@ export default function DsaPage() {
         title="DSA Preparation"
         description="Master Data Structures and Algorithms with our curated list of topics and problems. Track your progress and crack coding interviews."
         icon={Code2}
+        showBack
       />
 
       {/* topics grid */}

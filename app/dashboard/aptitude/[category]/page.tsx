@@ -1,10 +1,10 @@
 "use client";
 
 import { aptitudeQuestions } from "@/app/data/aptitudeQuestions";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Brain, Trophy, Flame, Eye, EyeOff, CheckCircle2, Circle, AlertCircle, RefreshCw, Target } from "lucide-react";
+import { Brain, Trophy, Flame, Eye, EyeOff, CheckCircle2, Circle, AlertCircle, RefreshCw, Target, ArrowLeft } from "lucide-react";
 import ProgressBar from "@/components/ui/ProgressBar";
 import SearchInput from "@/components/ui/SearchInput";
 import GradientButton from "@/components/ui/GradientButton";
@@ -13,6 +13,7 @@ import StatCard from "@/components/ui/StatCard";
 
 export default function AptitudeCategoryPage() {
   const params = useParams();
+  const router = useRouter();
   const category = params.category as string;
   const questions = aptitudeQuestions[category] || [];
 
@@ -48,6 +49,13 @@ export default function AptitudeCategoryPage() {
 
   return (
     <div className="p-4 sm:p-6 lg:p-8 max-w-5xl mx-auto">
+      <button
+        onClick={() => router.back()}
+        className="flex items-center gap-2 text-sm font-semibold text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-colors mb-6 group"
+      >
+        <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
+        Back
+      </button>
       
       {/* Header & Progress */}
       <div className="mb-10">

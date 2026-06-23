@@ -16,6 +16,7 @@ export default function InterviewPage() {
         description="Master technical concepts and HR questions to confidently clear your interviews."
         icon={Mic}
         iconColor="text-purple-500"
+        showBack
       />
 
       {/* categories grid */}

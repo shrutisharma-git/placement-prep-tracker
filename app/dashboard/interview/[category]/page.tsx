@@ -1,10 +1,10 @@
 "use client";
 
 import { interviewQuestions } from "@/app/data/interviewQuestions";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Mic, Trophy, Eye, EyeOff, CheckCircle2, Circle, AlertCircle, RefreshCw, MessageSquare } from "lucide-react";
+import { Mic, Trophy, Eye, EyeOff, CheckCircle2, Circle, AlertCircle, RefreshCw, MessageSquare, ArrowLeft } from "lucide-react";
 import ProgressBar from "@/components/ui/ProgressBar";
 import SearchInput from "@/components/ui/SearchInput";
 import GradientButton from "@/components/ui/GradientButton";
@@ -12,6 +12,7 @@ import EmptyState from "@/components/ui/EmptyState";
 
 export default function InterviewCategoryPage() {
   const params = useParams();
+  const router = useRouter();
   const category = params.category as string;
   const questions = interviewQuestions[category] || [];
 
@@ -46,7 +47,14 @@ export default function InterviewCategoryPage() {
 
   return (
     <div className="p-4 sm:p-6 lg:p-8 max-w-5xl mx-auto">
-      
+      <button
+        onClick={() => router.back()}
+        className="flex items-center gap-2 text-sm font-semibold text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-colors mb-6 group"
+      >
+        <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
+        Back
+      </button>
+
       {/* Header & Progress */}
       <div className="mb-10">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-6">
