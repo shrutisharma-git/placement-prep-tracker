@@ -111,7 +111,7 @@ export default function Dashboard(){
       </div>
 
       {/* Welcome */}
-      <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-8 rounded-2xl shadow-lg mb-8">
+      <div className="bg-gradient-to-r from-blue-500 to-blue-700 text-white p-8 rounded-2xl shadow-lg mb-8">
 
         <h1 className="text-3xl font-bold">
             Welcome Back 👋
@@ -129,15 +129,15 @@ export default function Dashboard(){
 
         <div className="bg-blue-500 text-white p-6 rounded-2xl shadow">
           <h3 className="text-xl font-semibold">DSA Solved</h3>
-          <p className="text-2xl font-bold text-blue-600">{stats.dsa}</p>
+          <p className="text-2xl font-bold text-blue-200">{stats.dsa}</p>
         </div>
         <div className="bg-green-500 text-white p-6 rounded-2xl shadow">
           <h3 className="text-xl font-semibold">Aptitude</h3>
-          <p className="text-2xl font-bold text-green-600">{stats.aptitude}</p>
+          <p className="text-2xl font-bold text-green-200">{stats.aptitude}</p>
         </div>
         <div className="bg-purple-500 text-white p-6 rounded-2xl shadow">
           <h3 className="text-xl font-semibold">Mock Interview</h3>
-          <p className="text-2xl font-bold text-purple-600">{stats.mockInterview}</p>
+          <p className="text-2xl font-bold text-purple-200">{stats.mockInterview}</p>
         </div>
 
       </div>
@@ -195,7 +195,7 @@ export default function Dashboard(){
       </div>
 
       {/* Activity Section */}
-      <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow">
+      <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow mt-4">
 
         <h2 className="text-2xl font-bold mb-4 dark:text-white">
             Recent Activity
@@ -226,7 +226,7 @@ export default function Dashboard(){
 
       {/* Quick Actions */}
 
-      <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow">
+      {/* <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow">
 
       <h2 className="text-2xl font-bold mb-4 dark:text-white">
           Quick Access
@@ -250,9 +250,9 @@ export default function Dashboard(){
         >
           Interview
         </button>
-      </div>
+      </div> */}
 
-    </div>
+    {/* </div> */}
 
       <div className="mt-8 bg-gradient-to-r from-pink-500 to-red-500 text-white p-6 rounded-2xl shadow">
 
