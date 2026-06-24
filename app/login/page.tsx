@@ -41,6 +41,7 @@ export default function LoginPage() {
         setSuccess(data.message);
         localStorage.setItem("user", JSON.stringify(data.user));
         router.push("/dashboard");
+        router.refresh();
       }
     } catch (e) {
       setError("Something went wrong:");
