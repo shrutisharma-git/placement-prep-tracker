@@ -48,6 +48,7 @@ export default function Navbar() {
     localStorage.removeItem("user");
     setIsLoggedIn(false);
     router.push("/login");
+    router.refresh();
   };
 
   const isActive = (href: string) => {
