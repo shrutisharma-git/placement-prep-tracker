@@ -1,7 +1,7 @@
 "use client";
 
 import { aptitudeQuestions } from "@/app/data/aptitudeQuestions";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Brain, Trophy, Flame, Eye, EyeOff, CheckCircle2, Circle, AlertCircle, RefreshCw, Target } from "lucide-react";
