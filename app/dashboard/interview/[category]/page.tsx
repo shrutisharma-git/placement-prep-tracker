@@ -1,7 +1,7 @@
 "use client";
 
 import { interviewQuestions } from "@/app/data/interviewQuestions";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Mic, Trophy, Eye, EyeOff, CheckCircle2, Circle, AlertCircle, RefreshCw, MessageSquare } from "lucide-react";
