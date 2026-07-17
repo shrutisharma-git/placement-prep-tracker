@@ -7,6 +7,10 @@ export interface IUser extends Document {
   role: string;
   refreshToken?: string;
 
+  isVerified: boolean;
+  verificationOTP: string;
+  verificationOTPExpires: Date;
+
   stats: {
     dsa: number;
     aptitude: number;
@@ -91,7 +95,19 @@ const userSchema = new mongoose.Schema<IUser>(
     lastActiveDate: {
       type: String,
       default: ""
-    }
+    },
+
+    isVerified: {
+      type: Boolean,
+      default: false,
+    },
+    verificationOTP: {
+      type: String,
+      default: "",
+    },
+    verificationOTPExpires: {
+      type: Date,
+    },
 
   },
   { timestamps: true }
