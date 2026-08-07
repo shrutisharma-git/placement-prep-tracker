@@ -3,8 +3,8 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { motion } from "framer-motion";
-import { Mail, Lock, Eye, EyeOff, User, Rocket, AlertCircle, CheckCircle2, ShieldCheck } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Mail, Lock, Eye, EyeOff, User, Rocket, AlertCircle, CheckCircle2, ShieldCheck, KeyRound } from "lucide-react";
 
 export default function Register() {
   const router = useRouter();
@@ -15,6 +15,9 @@ export default function Register() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const [showOTP, setShowOTP] = useState(false);
+  const [otp, setOtp] = useState("");
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -62,15 +65,37 @@ export default function Register() {
       if (!data.success) {
         setError(data.message);
       } else {
-        setSuccess("Account created Successfully 🎉");
-
-        //redirect after 1.5 sec
-        setTimeout(() => {
-          router.push("/login");
-        }, 1500);
+        setSuccess("Account created! Please check your email for the OTP.");
+        setShowOTP(true);
       }
     } catch (error) {
       setError("Something went wrong");
+    }
+    setLoading(false);
+  };
+
+  const handleVerifyOTP = async (e: any) => {
+    e.preventDefault();
+    setError("");
+    setSuccess("");
+    setLoading(true);
+
+    try {
+      const res = await fetch("/api/verify", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, otp }),
+      });
+      const data = await res.json();
+
+      if (!data.success) {
+        setError(data.message);
+      } else {
+        setSuccess("Email verified successfully! Redirecting...");
+        setTimeout(() => router.push("/login"), 1500);
+      }
+    } catch (error) {
+      setError("Verification failed. Please try again.");
     }
     setLoading(false);
   };
@@ -109,32 +134,34 @@ export default function Register() {
               <Rocket size={24} className="text-white" />
             </div>
             <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">
-              Create Account
+              {showOTP ? "Verify Email" : "Create Account"}
             </h2>
             <p className="text-slate-500 dark:text-slate-400 mt-2 text-sm">
-              Join thousands of students preparing for placements
+              {showOTP ? `We sent an OTP to ${email}` : "Join thousands of students preparing for placements"}
             </p>
           </div>
 
           {/* Step Indicators */}
-          <div className="flex items-center justify-center gap-2 mb-8">
-            {steps.map((step, i) => (
-              <div key={i} className="flex items-center gap-2">
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300
-                  ${step.filled
-                    ? "bg-gradient-to-br from-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-500/20"
-                    : "bg-slate-100 dark:bg-slate-700 text-slate-400 dark:text-slate-500"
-                  }`}>
-                  {i + 1}
+          {!showOTP && (
+            <div className="flex items-center justify-center gap-2 mb-8">
+              {steps.map((step, i) => (
+                <div key={i} className="flex items-center gap-2">
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300
+                    ${step.filled
+                      ? "bg-gradient-to-br from-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-500/20"
+                      : "bg-slate-100 dark:bg-slate-700 text-slate-400 dark:text-slate-500"
+                    }`}>
+                    {i + 1}
+                  </div>
+                  {i < steps.length - 1 && (
+                    <div className={`w-8 h-0.5 rounded-full transition-colors duration-300
+                      ${step.filled ? "bg-blue-500" : "bg-slate-200 dark:bg-slate-700"}`}
+                    />
+                  )}
                 </div>
-                {i < steps.length - 1 && (
-                  <div className={`w-8 h-0.5 rounded-full transition-colors duration-300
-                    ${step.filled ? "bg-blue-500" : "bg-slate-200 dark:bg-slate-700"}`}
-                  />
-                )}
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
 
           {/* Error Alert */}
           {error && (
@@ -160,166 +187,233 @@ export default function Register() {
             </motion.div>
           )}
 
-          <form onSubmit={handleRegister} className="space-y-5">
-            {/* Name */}
-            <div>
-              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-                Full Name
-              </label>
-              <div className="relative">
-                <User size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
-                <input
-                  type="text"
-                  placeholder="Enter your name"
-                  value={name}
-                  className="w-full pl-11 pr-4 py-3 rounded-xl
-                    border border-slate-200 dark:border-slate-700
-                    bg-white dark:bg-slate-800/80
-                    text-slate-900 dark:text-white
-                    placeholder:text-slate-400
-                    focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500
-                    transition-all duration-300"
-                  onChange={(e) => setName(e.target.value)}
-                />
-              </div>
-            </div>
-
-            {/* Email */}
-            <div>
-              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-                Email
-              </label>
-              <div className="relative">
-                <Mail size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
-                <input
-                  type="email"
-                  placeholder="you@example.com"
-                  value={email}
-                  className="w-full pl-11 pr-4 py-3 rounded-xl
-                    border border-slate-200 dark:border-slate-700
-                    bg-white dark:bg-slate-800/80
-                    text-slate-900 dark:text-white
-                    placeholder:text-slate-400
-                    focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500
-                    transition-all duration-300"
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-              </div>
-            </div>
-
-            {/* Password */}
-            <div>
-              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-                Password
-              </label>
-              <div className="relative">
-                <Lock size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
-                <input
-                  type={showPassword ? "text" : "password"}
-                  placeholder="Create a password"
-                  value={password}
-                  className="w-full pl-11 pr-12 py-3 rounded-xl
-                    border border-slate-200 dark:border-slate-700
-                    bg-white dark:bg-slate-800/80
-                    text-slate-900 dark:text-white
-                    placeholder:text-slate-400
-                    focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500
-                    transition-all duration-300"
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"
-                >
-                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                </button>
-              </div>
-
-              {/* Password Strength Indicator */}
-              {password.length > 0 && (
-                <div className="mt-3">
-                  <div className="flex gap-1.5">
-                    {[1, 2, 3, 4].map((level) => (
-                      <div
-                        key={level}
-                        className={`h-1.5 flex-1 rounded-full transition-all duration-300
-                          ${level <= passwordStrength ? strengthColors[passwordStrength] : "bg-slate-200 dark:bg-slate-700"}`}
-                      />
-                    ))}
-                  </div>
-                  <div className="flex items-center gap-1.5 mt-1.5">
-                    <ShieldCheck size={12} className={strengthTextColors[passwordStrength]} />
-                    <span className={`text-xs font-medium ${strengthTextColors[passwordStrength]}`}>
-                      {strengthLabels[passwordStrength]}
-                    </span>
+          <AnimatePresence mode="wait">
+            {!showOTP ? (
+              <motion.form 
+                key="register-form"
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.3 }}
+                onSubmit={handleRegister} 
+                className="space-y-5"
+              >
+                {/* Name */}
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                    Full Name
+                  </label>
+                  <div className="relative">
+                    <User size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
+                    <input
+                      type="text"
+                      placeholder="Enter your name"
+                      value={name}
+                      className="w-full pl-11 pr-4 py-3 rounded-xl
+                        border border-slate-200 dark:border-slate-700
+                        bg-white dark:bg-slate-800/80
+                        text-slate-900 dark:text-white
+                        placeholder:text-slate-400
+                        focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500
+                        transition-all duration-300"
+                      onChange={(e) => setName(e.target.value)}
+                    />
                   </div>
                 </div>
-              )}
-            </div>
 
-            {/* Confirm Password */}
-            <div>
-              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-                Confirm Password
-              </label>
-              <div className="relative">
-                <Lock size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
-                <input
-                  type={showConfirmPassword ? "text" : "password"}
-                  placeholder="Confirm your password"
-                  value={confirmPassword}
-                  className="w-full pl-11 pr-12 py-3 rounded-xl
-                    border border-slate-200 dark:border-slate-700
-                    bg-white dark:bg-slate-800/80
-                    text-slate-900 dark:text-white
-                    placeholder:text-slate-400
-                    focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500
-                    transition-all duration-300"
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                />
+                {/* Email */}
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                    Email
+                  </label>
+                  <div className="relative">
+                    <Mail size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
+                    <input
+                      type="email"
+                      placeholder="you@example.com"
+                      value={email}
+                      className="w-full pl-11 pr-4 py-3 rounded-xl
+                        border border-slate-200 dark:border-slate-700
+                        bg-white dark:bg-slate-800/80
+                        text-slate-900 dark:text-white
+                        placeholder:text-slate-400
+                        focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500
+                        transition-all duration-300"
+                      onChange={(e) => setEmail(e.target.value)}
+                    />
+                  </div>
+                </div>
+
+                {/* Password */}
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                    Password
+                  </label>
+                  <div className="relative">
+                    <Lock size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      placeholder="Create a password"
+                      value={password}
+                      className="w-full pl-11 pr-12 py-3 rounded-xl
+                        border border-slate-200 dark:border-slate-700
+                        bg-white dark:bg-slate-800/80
+                        text-slate-900 dark:text-white
+                        placeholder:text-slate-400
+                        focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500
+                        transition-all duration-300"
+                      onChange={(e) => setPassword(e.target.value)}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"
+                    >
+                      {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                    </button>
+                  </div>
+
+                  {/* Password Strength Indicator */}
+                  {password.length > 0 && (
+                    <div className="mt-3">
+                      <div className="flex gap-1.5">
+                        {[1, 2, 3, 4].map((level) => (
+                          <div
+                            key={level}
+                            className={`h-1.5 flex-1 rounded-full transition-all duration-300
+                              ${level <= passwordStrength ? strengthColors[passwordStrength] : "bg-slate-200 dark:bg-slate-700"}`}
+                          />
+                        ))}
+                      </div>
+                      <div className="flex items-center gap-1.5 mt-1.5">
+                        <ShieldCheck size={12} className={strengthTextColors[passwordStrength]} />
+                        <span className={`text-xs font-medium ${strengthTextColors[passwordStrength]}`}>
+                          {strengthLabels[passwordStrength]}
+                        </span>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Confirm Password */}
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                    Confirm Password
+                  </label>
+                  <div className="relative">
+                    <Lock size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
+                    <input
+                      type={showConfirmPassword ? "text" : "password"}
+                      placeholder="Confirm your password"
+                      value={confirmPassword}
+                      className="w-full pl-11 pr-12 py-3 rounded-xl
+                        border border-slate-200 dark:border-slate-700
+                        bg-white dark:bg-slate-800/80
+                        text-slate-900 dark:text-white
+                        placeholder:text-slate-400
+                        focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500
+                        transition-all duration-300"
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"
+                    >
+                      {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                    </button>
+                  </div>
+                  {confirmPassword.length > 0 && password !== confirmPassword && (
+                    <p className="text-xs text-red-500 mt-1.5">Passwords do not match</p>
+                  )}
+                </div>
+
+                {/* Register Button */}
                 <button
-                  type="button"
-                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"
+                  type="submit"
+                  disabled={loading}
+                  className="w-full py-3 rounded-xl font-semibold text-white
+                    bg-gradient-to-r from-blue-600 to-indigo-600
+                    hover:from-blue-500 hover:to-indigo-500
+                    shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40
+                    transition-all duration-300 hover:scale-[1.01] active:scale-[0.99]
+                    disabled:opacity-50 disabled:cursor-not-allowed
+                    flex items-center justify-center gap-2 mt-6"
                 >
-                  {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  {loading && (
+                    <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                    </svg>
+                  )}
+                  {loading ? "Creating account..." : "Create Account"}
                 </button>
-              </div>
-              {confirmPassword.length > 0 && password !== confirmPassword && (
-                <p className="text-xs text-red-500 mt-1.5">Passwords do not match</p>
-              )}
-            </div>
-
-            {/* Register Button */}
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full py-3 rounded-xl font-semibold text-white
-                bg-gradient-to-r from-blue-600 to-indigo-600
-                hover:from-blue-500 hover:to-indigo-500
-                shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40
-                transition-all duration-300 hover:scale-[1.01] active:scale-[0.99]
-                disabled:opacity-50 disabled:cursor-not-allowed
-                flex items-center justify-center gap-2 mt-6"
-            >
-              {loading && (
-                <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                </svg>
-              )}
-              {loading ? "Creating account..." : "Create Account"}
-            </button>
-          </form>
+              </motion.form>
+            ) : (
+              <motion.form 
+                key="otp-form"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 20 }}
+                transition={{ duration: 0.3 }}
+                onSubmit={handleVerifyOTP} 
+                className="space-y-5"
+              >
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                    Enter OTP
+                  </label>
+                  <div className="relative">
+                    <KeyRound size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
+                    <input
+                      type="text"
+                      placeholder="6-digit code"
+                      value={otp}
+                      maxLength={6}
+                      className="w-full pl-11 pr-4 py-3 rounded-xl
+                        border border-slate-200 dark:border-slate-700
+                        bg-white dark:bg-slate-800/80
+                        text-slate-900 dark:text-white
+                        placeholder:text-slate-400
+                        focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500
+                        transition-all duration-300 tracking-widest text-center text-xl font-semibold"
+                      onChange={(e) => setOtp(e.target.value.replace(/[^0-9]/g, ''))}
+                    />
+                  </div>
+                </div>
+                
+                <button
+                  type="submit"
+                  disabled={loading || otp.length !== 6}
+                  className="w-full py-3 rounded-xl font-semibold text-white
+                    bg-gradient-to-r from-emerald-500 to-teal-500
+                    hover:from-emerald-400 hover:to-teal-400
+                    shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40
+                    transition-all duration-300 hover:scale-[1.01] active:scale-[0.99]
+                    disabled:opacity-50 disabled:cursor-not-allowed
+                    flex items-center justify-center gap-2 mt-6"
+                >
+                  {loading && (
+                    <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                    </svg>
+                  )}
+                  {loading ? "Verifying..." : "Verify & Continue"}
+                </button>
+              </motion.form>
+            )}
+          </AnimatePresence>
 
           {/* Footer */}
-          <p className="text-center text-sm text-slate-600 dark:text-slate-400 mt-6">
-            Already have an account?{" "}
-            <Link href="/login" className="text-blue-600 dark:text-blue-400 font-semibold hover:underline">
-              Sign in
-            </Link>
-          </p>
+          {!showOTP && (
+            <p className="text-center text-sm text-slate-600 dark:text-slate-400 mt-6">
+              Already have an account?{" "}
+              <Link href="/login" className="text-blue-600 dark:text-blue-400 font-semibold hover:underline">
+                Sign in
+              </Link>
+            </p>
+          )}
         </div>
       </motion.div>
     </div>

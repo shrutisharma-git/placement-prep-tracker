@@ -58,11 +58,15 @@ export async function POST(req:Request){
 
         await existingUser.save();
 
-        await sendEmail(
-            email,
-            "Verify your email",
-            verificationEmailTemplate(existingUser.name, otp)
-        );
+        try {
+            await sendEmail(
+                email,
+                "Verify your email",
+                verificationEmailTemplate(existingUser.name, otp)
+            );
+        } catch (emailError: any) {
+            console.error("Failed to send email (likely due to Resend domain restrictions):", emailError.message);
+        }
 
         return NextResponse.json(
             {
@@ -101,11 +105,15 @@ export async function POST(req:Request){
         console.log("Sending OTP:", otp);
         console.log("To:", email);
 
-        await sendEmail(
-            email,
-            "Verify your email",
-            verificationEmailTemplate(name, otp)
-        );
+        try {
+            await sendEmail(
+                email,
+                "Verify your email",
+                verificationEmailTemplate(name, otp)
+            );
+        } catch (emailError: any) {
+            console.error("Failed to send email (likely due to Resend domain restrictions):", emailError.message);
+        }
 
 
         console.log("Email sent");
