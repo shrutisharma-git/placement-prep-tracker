@@ -1,6 +1,7 @@
 import connectDB from "@/lib/mongodb";
 import User from "@/models/User";
 import { NextResponse } from "next/server";
+import * as OTPAuth from "otpauth";
 
 export async function POST(req: Request) {
     try {
@@ -40,30 +41,30 @@ export async function POST(req: Request) {
             );
         }
 
-        if (user.verificationOTP !== otp) {
+        let totp = new OTPAuth.TOTP({
+            issuer: "Placement Prep Tracker",
+            label: user.email,
+            algorithm: "SHA1",
+            digits: 6,
+            period: 30,
+            secret: OTPAuth.Secret.fromBase32(user.totpSecret),
+        });
+
+        const delta = totp.validate({ token: otp, window: 1 });
+
+        if (delta === null) {
             return NextResponse.json(
                 {
                     success: false,
-                    message: "Invalid OTP"
+                    message: "Invalid or expired Authenticator code"
                 },
                 { status: 400 }
             );
         }
 
-        if (new Date() > new Date(user.verificationOTPExpires)) {
-            return NextResponse.json(
-                {
-                    success: false,
-                    message: "OTP has expired. Please request a new one."
-                },
-                { status: 400 }
-            );
-        }
-
-        // Mark user as verified and clear OTP fields
+        // Mark user as verified
         user.isVerified = true;
-        user.verificationOTP = "";
-        
+
         await user.save();
 
         return NextResponse.json(

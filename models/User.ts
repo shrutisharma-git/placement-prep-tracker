@@ -8,8 +8,7 @@ export interface IUser extends Document {
   refreshToken?: string;
 
   isVerified: boolean;
-  verificationOTP: string;
-  verificationOTPExpires: Date;
+  totpSecret: string;
 
   stats: {
     dsa: number;
@@ -58,11 +57,11 @@ const userSchema = new mongoose.Schema<IUser>(
         type: Number,
         default: 0,
       },
-      aptitude:{
+      aptitude: {
         type: Number,
         default: 0,
       },
-      mockInterview:{
+      mockInterview: {
         type: Number,
         default: 0,
       },
@@ -72,7 +71,7 @@ const userSchema = new mongoose.Schema<IUser>(
       type: [String],
       default: []
     },
-    
+
     solvedProblems: {
       type: [String],
       default: []
@@ -91,7 +90,7 @@ const userSchema = new mongoose.Schema<IUser>(
       type: Number,
       default: 0
     },
-    
+
     lastActiveDate: {
       type: String,
       default: ""
@@ -101,12 +100,9 @@ const userSchema = new mongoose.Schema<IUser>(
       type: Boolean,
       default: false,
     },
-    verificationOTP: {
+    totpSecret: {
       type: String,
       default: "",
-    },
-    verificationOTPExpires: {
-      type: Date,
     },
 
   },

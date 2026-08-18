@@ -18,6 +18,8 @@ export default function Register() {
 
   const [showOTP, setShowOTP] = useState(false);
   const [otp, setOtp] = useState("");
+  const [qrCode, setQrCode] = useState("");
+  const [secretCode, setSecretCode] = useState("");
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -65,7 +67,9 @@ export default function Register() {
       if (!data.success) {
         setError(data.message);
       } else {
-        setSuccess("Account created! Please check your email for the OTP.");
+        setQrCode(data.qrCode);
+        setSecretCode(data.secret);
+        setSuccess(data.message || "Account created! Please scan the QR code.");
         setShowOTP(true);
       }
     } catch (error) {
@@ -137,7 +141,7 @@ export default function Register() {
               {showOTP ? "Verify Email" : "Create Account"}
             </h2>
             <p className="text-slate-500 dark:text-slate-400 mt-2 text-sm">
-              {showOTP ? `We sent an OTP to ${email}` : "Join thousands of students preparing for placements"}
+              {showOTP ? "Setup your Authenticator app" : "Join thousands of students preparing for placements"}
             </p>
           </div>
 
@@ -189,13 +193,13 @@ export default function Register() {
 
           <AnimatePresence mode="wait">
             {!showOTP ? (
-              <motion.form 
+              <motion.form
                 key="register-form"
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
                 transition={{ duration: 0.3 }}
-                onSubmit={handleRegister} 
+                onSubmit={handleRegister}
                 className="space-y-5"
               >
                 {/* Name */}
@@ -350,15 +354,27 @@ export default function Register() {
                 </button>
               </motion.form>
             ) : (
-              <motion.form 
+              <motion.form
                 key="otp-form"
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: 20 }}
                 transition={{ duration: 0.3 }}
-                onSubmit={handleVerifyOTP} 
+                onSubmit={handleVerifyOTP}
                 className="space-y-5"
               >
+                {qrCode && (
+                  <div className="flex flex-col items-center justify-center space-y-4 mb-6">
+                    <img src={qrCode} alt="TOTP QR Code" className="w-48 h-48 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 bg-white" />
+                    {secretCode && (
+                      <div className="text-center w-full">
+                        <p className="text-sm font-medium text-slate-700 dark:text-slate-300">Or enter this secret key manually:</p>
+                        <code className="px-3 py-1.5 mt-2 inline-block bg-slate-100 dark:bg-slate-800 rounded-lg text-emerald-600 dark:text-emerald-400 font-mono tracking-widest text-sm border border-slate-200 dark:border-slate-700">{secretCode}</code>
+                      </div>
+                    )}
+                  </div>
+                )}
+
                 <div>
                   <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                     Enter OTP
@@ -381,7 +397,7 @@ export default function Register() {
                     />
                   </div>
                 </div>
-                
+
                 <button
                   type="submit"
                   disabled={loading || otp.length !== 6}
