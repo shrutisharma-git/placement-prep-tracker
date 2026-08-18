@@ -1,8 +1,8 @@
 "use client";
 import { dsaProblems } from "@/app/data/dsaProblems";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { ExternalLink, CheckCircle2, Circle, Trophy, Flame } from "lucide-react";
+import { ExternalLink, CheckCircle2, Circle, Trophy, Flame, ArrowLeft } from "lucide-react";
 import { motion } from "framer-motion";
 import ProgressBar from "@/components/ui/ProgressBar";
 import SearchInput from "@/components/ui/SearchInput";
@@ -12,6 +12,7 @@ import Loader from "@/components/ui/Loader";
 
 export default function DSATopicPage() {
   const params = useParams();
+  const router = useRouter();
   const topic = params.topic as string;
   const problems = dsaProblems[topic] || [];
 
@@ -85,6 +86,13 @@ export default function DSATopicPage() {
 
   return (
     <div className="p-4 sm:p-6 lg:p-8 max-w-5xl mx-auto">
+      <button
+        onClick={() => router.back()}
+        className="mb-6 inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/50 dark:bg-slate-800/50 hover:bg-white dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-all shadow-sm"
+      >
+        <ArrowLeft size={16} />
+        Go Back
+      </button>
 
       {/* Header & Progress */}
       <div className="mb-10">
