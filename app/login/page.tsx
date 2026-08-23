@@ -64,7 +64,7 @@ export default function LoginPage() {
       {/* Left Panel — Educational & Premium */}
       <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden
         bg-slate-50 dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800">
-        
+
         {/* Soft background pattern (Notion/Linear inspired) */}
         <div className="absolute inset-0 opacity-[0.04] dark:opacity-[0.06]"
           style={{
@@ -73,10 +73,10 @@ export default function LoginPage() {
           }}
         />
 
-        {/* Subtle floating blobs (Emerald/Teal/Sky) */}
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-emerald-400/10 dark:bg-emerald-500/10 rounded-full blur-[100px] animate-float" />
-        <div className="absolute bottom-[-10%] left-[-10%] w-[600px] h-[600px] bg-teal-400/10 dark:bg-teal-500/10 rounded-full blur-[120px] animate-float" style={{ animationDelay: "2s" }} />
-        <div className="absolute top-[40%] left-[20%] w-[300px] h-[300px] bg-sky-400/10 dark:bg-sky-500/10 rounded-full blur-[80px] animate-float" style={{ animationDelay: "4s" }} />
+        {/* Subtle floating blobs (Blue/Indigo/Purple) */}
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-400/10 dark:bg-blue-500/10 rounded-full blur-[100px] animate-float" />
+        <div className="absolute bottom-[-10%] left-[-10%] w-[600px] h-[600px] bg-indigo-400/10 dark:bg-indigo-500/10 rounded-full blur-[120px] animate-float" style={{ animationDelay: "2s" }} />
+        <div className="absolute top-[40%] left-[20%] w-[300px] h-[300px] bg-purple-400/10 dark:bg-purple-500/10 rounded-full blur-[80px] animate-float" style={{ animationDelay: "4s" }} />
 
         {/* Content */}
         <div className="relative z-10 flex flex-col justify-center px-12 xl:px-20 w-full">
@@ -86,13 +86,13 @@ export default function LoginPage() {
             transition={{ duration: 0.8, ease: "easeOut" }}
           >
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/60 dark:bg-slate-800/60 backdrop-blur-md border border-slate-200/60 dark:border-slate-700/60 text-slate-600 dark:text-slate-300 text-xs font-semibold uppercase tracking-wider mb-8 shadow-sm">
-              <Rocket size={14} className="text-emerald-500" />
+              <Rocket size={14} className="text-blue-500" />
               <span>Career Preparation Platform</span>
             </div>
 
             <h1 className="text-4xl xl:text-5xl font-semibold tracking-tight text-slate-900 dark:text-white leading-[1.15] mb-6">
               Master the skills that <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-teal-600 dark:from-emerald-400 dark:to-teal-400">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400">
                 top tech companies
               </span> demand.
             </h1>
