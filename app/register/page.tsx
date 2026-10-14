@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import GoogleSignInButton from "@/components/ui/GoogleSignInButton";
 import { motion, AnimatePresence } from "framer-motion";
 import { Mail, Lock, Eye, EyeOff, User, Rocket, AlertCircle, CheckCircle2, ShieldCheck, KeyRound } from "lucide-react";
 
@@ -202,6 +203,13 @@ export default function Register() {
                 onSubmit={handleRegister}
                 className="space-y-5"
               >
+                <GoogleSignInButton text="signup_with" />
+
+                <div className="flex items-center my-6">
+                  <div className="flex-grow border-t border-slate-200 dark:border-slate-700" />
+                  <span className="px-3 text-xs uppercase text-slate-400 font-semibold">Or sign up with email</span>
+                  <div className="flex-grow border-t border-slate-200 dark:border-slate-700" />
+                </div>
                 {/* Name */}
                 <div>
                   <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">

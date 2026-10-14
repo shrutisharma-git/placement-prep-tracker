@@ -71,7 +71,12 @@ export async function POST(req:Request){
         const response =  NextResponse.json(
             {
                 success: true,
-                message : "User logged in successfully"
+                message : "User logged in successfully",
+                user: {
+                    id: user._id,
+                    email: user.email,
+                    role: user.role
+                }
             },
             {status : 200}
         )
@@ -80,7 +85,7 @@ export async function POST(req:Request){
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
             sameSite: "strict",
-            maxAge: 10 * 60, // 10 minutes
+            maxAge: 24* 60 * 60, // 1 day
             path: "/"
             }
         );

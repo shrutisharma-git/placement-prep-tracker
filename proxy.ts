@@ -7,7 +7,7 @@ type UserPayload = {
   role: string;
 };
 
-export function proxy(req: NextRequest) {
+export default function proxy(req: NextRequest) {
   try {
     const token = req.cookies.get("token")?.value;
     const pathname = req.nextUrl.pathname;

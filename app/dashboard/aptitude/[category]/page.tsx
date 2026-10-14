@@ -4,7 +4,7 @@ import { aptitudeQuestions } from "@/app/data/aptitudeQuestions";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Brain, Trophy, Flame, Eye, EyeOff, CheckCircle2, Circle, AlertCircle, RefreshCw, Target, ArrowLeft } from "lucide-react";
+import { Brain, Trophy, Flame, Eye, EyeOff, CheckCircle2, Circle, AlertCircle, RefreshCw, Target } from "lucide-react";
 import ProgressBar from "@/components/ui/ProgressBar";
 import SearchInput from "@/components/ui/SearchInput";
 import GradientButton from "@/components/ui/GradientButton";
@@ -65,13 +65,6 @@ export default function AptitudeCategoryPage() {
 
   return (
     <div className="p-4 sm:p-6 lg:p-8 max-w-5xl mx-auto">
-      <button
-        onClick={() => router.back()}
-        className="mb-6 inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/50 dark:bg-slate-800/50 hover:bg-white dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-all shadow-sm"
-      >
-        <ArrowLeft size={16} />
-        Go Back
-      </button>
 
       {/* Header & Progress */}
       <div className="mb-10">
