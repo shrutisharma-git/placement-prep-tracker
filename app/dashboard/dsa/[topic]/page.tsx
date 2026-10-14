@@ -14,7 +14,7 @@ export default function DSATopicPage() {
   const params = useParams();
   const router = useRouter();
   const topic = params.topic as string;
-  const problems = dsaProblems[topic] || [];
+const [problems, setProblems] = useState<any[]>([]);
 
   const [solvedProblems, setSolvedProblems] = useState<string[]>([]);
   const [search, setSearch] = useState("");
@@ -48,19 +48,28 @@ export default function DSATopicPage() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const fetchSolvedProblems = async () => {
+    const fetchData = async () => {
       try {
-        const res = await fetch("/api/dashboard");
-        const data = await res.json();
-        setSolvedProblems(data.solvedProblems || []);
+        const [dashRes, probRes] = await Promise.all([
+          fetch("/api/dashboard"),
+          fetch(`/api/dsa/problems?topic=${topic}`)
+        ]);
+        const dashData = await dashRes.json();
+        const probData = await probRes.json();
+
+        setSolvedProblems(dashData.solvedProblems || []);
+        if (probData.problems) {
+          setProblems(probData.problems);
+        }
       } catch (error) {
-        console.error("Failed to fetch solved problems", error);
+        console.error("Failed to fetch data", error);
       } finally {
         setIsLoading(false);
       }
     };
-    fetchSolvedProblems();
-  }, []);
+    fetchData();
+  }, [topic]);
+
 
   const getDifficultyColor = (diff: string) => {
     if (diff === "Easy") return "text-emerald-600 bg-emerald-100 dark:bg-emerald-500/20 dark:text-emerald-400";
